@@ -1,2 +1,8 @@
 # IDEA file
 .idea/*
+
+# Temporary serialized file
+*.ser
+
+# Compiled file
+target/*
