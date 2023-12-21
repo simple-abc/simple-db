@@ -2,8 +2,6 @@ package com.northeastern.edu.simpledb.backend.common;
 
 import com.northeastern.edu.simpledb.common.Error;
 
-import java.lang.reflect.Executable;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.*;
 
@@ -55,6 +53,44 @@ public class AbstractCacheTest {
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
         CountDownLatch countDownLatch = new CountDownLatch(THREAD_COUNT);
 
+        Future<?>[] futures = new Future[THREAD_COUNT];
+
+        assertThrows(Error.CacheFullException.getClass(), () -> {
+            for (int i = 0; i < THREAD_COUNT; i++) {
+                final int finalI = i;
+                futures[i] = executorService.submit(() -> {
+                    countDownLatch.countDown();
+                    try {
+                        countDownLatch.await();
+                        Data data = cache.get(finalI % 2 == 0 ? 1L : 2L);
+                        if (data != null) System.out.println("data content = " + data.getContent());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+
+            for (int i = 0; i < THREAD_COUNT; i++) {
+                try {
+                    futures[i].get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        executorService.shutdown();
+        executorService.awaitTermination(2, TimeUnit.SECONDS);
+    }
+
+    @Test
+    void testMultiThreadGet_expectedNumberOfOutputEqualToThreadCount() throws Exception {
+        int maxResource = 2;
+        MyAbstractCache cache = new MyAbstractCache(maxResource);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+        CountDownLatch countDownLatch = new CountDownLatch(THREAD_COUNT);
+
         for (int i = 0; i < THREAD_COUNT; i++) {
             final int finalI = i;
             executorService.submit(() -> {
@@ -73,6 +109,37 @@ public class AbstractCacheTest {
         executorService.awaitTermination(2, TimeUnit.SECONDS);
     }
 
+    @Test
+    void testCacheRelease_expectedOnlyOneSerialization() throws InterruptedException {
+        int maxResource = 2;
+        MyAbstractCache cache = new MyAbstractCache(maxResource);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+        CountDownLatch countDownLatch = new CountDownLatch(THREAD_COUNT);
+
+        // submit multiple threads trying to access the same key concurrently
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            final int finalI = i;
+            executorService.submit(() -> {
+                countDownLatch.countDown();
+                try {
+                    countDownLatch.await();
+                    Data data = cache.get(1L);
+                    if (Thread.currentThread().getId() % 2 == 0) TimeUnit.SECONDS.sleep(2);
+                    System.out.println("Thread " + Thread.currentThread().getId() + " got data: " + data.getContent());
+                    // update data
+                    data.setContent(String.valueOf(finalI));
+                    // release the cache after processing
+                    cache.release(1L);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+
+        executorService.shutdown();
+        executorService.awaitTermination(2, TimeUnit.SECONDS);
+    }
 }
 
 class MyAbstractCache extends AbstractCache<Data> {
