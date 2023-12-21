@@ -32,14 +32,15 @@ public abstract class AbstractCache<T> {
 
     private Lock lock;
 
-    private Condition condition = lock.newCondition();
+    private Condition condition;
 
     public AbstractCache(int maxResource) {
         this.maxResource = maxResource;
         this.cache = new ConcurrentHashMap<>();
         this.references = new ConcurrentHashMap<>();
         this.getting = new ConcurrentHashMap<>();
-        lock = new ReentrantLock();
+        this.lock = new ReentrantLock();
+        this.condition = lock.newCondition();
     }
 
     // obtain data based on key
