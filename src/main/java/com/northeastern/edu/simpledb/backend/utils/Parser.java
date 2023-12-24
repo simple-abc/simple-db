@@ -21,4 +21,13 @@ public class Parser {
     public static byte[] short2Byte(short value) {
         return ByteBuffer.allocate(Short.SIZE / Byte.SIZE).putShort(value).array();
     }
+
+    public static byte[] int2Byte(int value) {
+        return ByteBuffer.allocate(Integer.SIZE / Byte.SIZE).putInt(value).array();
+    }
+
+    public static int parseInt(byte[] array) {
+        ByteBuffer buf = ByteBuffer.wrap(array, 0, array.length);
+        return buf.getInt();
+    }
 }
