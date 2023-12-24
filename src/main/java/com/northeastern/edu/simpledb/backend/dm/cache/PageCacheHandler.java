@@ -26,7 +26,7 @@ public interface PageCacheHandler {
         File f = new File(path + PageCache.DB_SUFFIX);
         try {
             if (!f.createNewFile()) {
-                Panic.panic(Error.FileNotExistsException);
+                Panic.panic(Error.FileExistsException);
             }
         } catch (Exception e) {
             Panic.panic(Error.FileCannotRWException);
