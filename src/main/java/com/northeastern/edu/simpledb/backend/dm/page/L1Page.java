@@ -9,8 +9,7 @@ import java.util.Arrays;
  * L1 Page
  * when db start up, write random bytes from OF_VC to (OF_VC + LEN_VC - 1) byte
  * when db close, copy random bytes from (OF_VC + LEN_VC) to (OF_VC + 2 * LEN_VC - 1) byte
- * used to determine whether the database was shut down normally
- * last time
+ * used to determine whether the database was shut down normally in the last time
  */
 public class L1Page {
 

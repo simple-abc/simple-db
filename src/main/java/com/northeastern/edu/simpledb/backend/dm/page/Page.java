@@ -11,13 +11,13 @@ public class Page extends AbstractPage {
     private byte[] data;
     private boolean dirty;
     private Lock lock;
-    private PageCache pc;
+    private PageCache pageCache;
 
 
     public Page(int pageNumber, byte[] data, PageCache pc) {
         this.pageNumber = pageNumber;
         this.data = data;
-        this.pc = pc;
+        this.pageCache = pc;
         this.lock = new ReentrantLock();
     }
 
@@ -33,7 +33,7 @@ public class Page extends AbstractPage {
 
     @Override
     public void release() {
-        pc.release(this);
+        pageCache.release(this);
     }
 
     @Override
