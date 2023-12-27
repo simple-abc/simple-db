@@ -3,14 +3,21 @@ package com.northeastern.edu.simpledb.backend.dm.page;
 import com.northeastern.edu.simpledb.backend.dm.cache.PageCache;
 import com.northeastern.edu.simpledb.backend.utils.Parser;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+/**
+ * Secondary Page
+ * starting with a 2 bytes unsigned number representing the
+ * offset of the free location in this pge. the rest is the
+ * actual stored data
+ */
 public class SecondaryPage {
 
     private static final short OF_FREE = 0;
     private static final short OF_DATA = 2;
+    public static final int MAX_FREE_SPACE = PageCache.PAGE_SIZE - OF_DATA;
 
+    // init a raw data as secondary page [Offset: 2bytes][Data]
     public static byte[] initRaw() {
         byte[] raw = new byte[PageCache.PAGE_SIZE];
         setFSO(raw, OF_DATA);
@@ -40,14 +47,12 @@ public class SecondaryPage {
         return getFSO(page.getData());
     }
 
+    // comes in handy when calculating free space for page index
     public static int getFreeSpace(Page page) {
         return PageCache.PAGE_SIZE - (int) getFSO(page.getData());
     }
 
-    /**
-     * recover insert statement from log file
-     * update FSO of page if needed
-     */
+    // recover insert statement from log file, update FSO of page if needed
     public static void recoverInsert(Page page, byte[] raw, short offset) {
         page.setDirty(true);
         System.arraycopy(raw, 0, page.getData(), offset, raw.length);
