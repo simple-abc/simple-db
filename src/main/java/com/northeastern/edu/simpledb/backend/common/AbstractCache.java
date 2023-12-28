@@ -142,7 +142,7 @@ public abstract class AbstractCache<T> {
     }
 
     // default behavior to perform if cache misses
-    protected abstract T getForCache(long key);
+    protected abstract T getForCache(long key) throws Exception;
 
     // default write back behavior when cache eviction
     protected abstract void releaseForCache(T obj);
