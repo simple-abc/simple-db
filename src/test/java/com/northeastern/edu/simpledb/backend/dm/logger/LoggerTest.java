@@ -1,4 +1,4 @@
-package com.northeastern.edu.simpledb.backend.dm;
+package com.northeastern.edu.simpledb.backend.dm.logger;
 
 import com.northeastern.edu.simpledb.backend.dm.logger.Logger;
 import org.junit.jupiter.api.*;
