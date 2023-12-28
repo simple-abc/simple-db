@@ -70,7 +70,7 @@ public class TransactionManager extends AbstractTransactionManager{
         } catch (IOException e) {
             Panic.panic(e);
         }
-        this.xidCounter = buf.getLong();
+        this.xidCounter = Parser.parseLong(buf.array());
         long end = getXidPosition(this.xidCounter + 1);
         if (end != fileLength) {
             Panic.panic(Error.BadXIDFileException);
@@ -174,7 +174,7 @@ public class TransactionManager extends AbstractTransactionManager{
     @Override
     public boolean isCommitted(long xid) {
         if(xid == SUPER_XID) return true;
-        return checkXID(xid, FIELD_TRAN_ACTIVE);
+        return checkXID(xid, FIELD_TRAN_COMMITTED);
     }
 
     @Override
