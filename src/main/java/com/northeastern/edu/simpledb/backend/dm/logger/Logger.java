@@ -211,6 +211,8 @@ public class Logger extends AbstractLogger{
             fc.write(buf);
         } catch (IOException e) {
             Panic.panic(e);
+        } finally {
+            lock.unlock();
         }
 
         // step3 update check sum
