@@ -38,13 +38,13 @@ public class PageIndex {
     }
 
     /**
-     * calculating how many free block storage need, then
-     * accessing the next one, leaving the last one block
-     * as empty ensuring the data won't across two pages
+     * calculating how many free block storage needed, then
+     * accessing the next one, having more block storage and
+     * ensuring the data won't across two pages.
      */
     public PageInfo select(int spaceSize) {
         int number = spaceSize / THRESHOLD; // how many free block storage need?
-        if (number < INTERVALS_NO) number++;
+        if (number < INTERVALS_NO) number++; // rounded up
 
         // iterate over lists finding the first page doesn't acquire by other thread
         while (number <= INTERVALS_NO) {
@@ -52,7 +52,7 @@ public class PageIndex {
                 number++;
                 continue;
             }
-            return lists[number].remove(0);
+            if (lists[number].size() > 0) return lists[number].remove(0);
         }
         return null;
     }
