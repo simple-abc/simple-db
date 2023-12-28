@@ -28,32 +28,34 @@ public class RecoverTest {
 
     @BeforeAll
     static void setup() {
-        tm = TransactionManager.create("tm-test");
-        dm = DataMangerHandler.create("dm-test", PageCache.PAGE_SIZE * 10, tm);
+        tm = TransactionManager.create("recover-test");
+        dm = DataMangerHandler.create("recover-test", PageCache.PAGE_SIZE * 10, tm);
         xid = tm.begin();
     }
 
     @AfterAll
     static void cleanTestEnv() {
-        new File("dm-test" + LOG_SUFFIX).delete();
-        new File("dm-test" + DB_SUFFIX).delete();
-        new File("tm-test" + XID_SUFFIX).delete();
+        new File("recover-test" + LOG_SUFFIX).delete();
+        new File("recover-test" + DB_SUFFIX).delete();
+        new File("recover-test" + XID_SUFFIX).delete();
     }
 
     @Test
-    void testRecover_expectedRedoWorks() {
+    void testRecover_expectedRedoWorksAndDataItemWithCorrespondingUidBecomesInvalid() {
         long uid;
         try {
             uid = dm.insert(xid, "hello db!".getBytes(StandardCharsets.UTF_8));
             DataItem dataItem0 = dm.read(uid);
+            dataItem0.rLock();
             SubArray data0 = dataItem0.data();
+            dataItem0.rUnLock();
             byte[] bytes = Arrays.copyOfRange(data0.raw, data0.start, data0.end);
             String actualStr = new String(bytes);
             Assertions.assertEquals("hello db!", actualStr);
 
             Field loggerFiled = dm.getClass().getDeclaredField("logger");
             loggerFiled.setAccessible(true);
-            Logger reloadedLog = Logger.open("dm-test");
+            Logger reloadedLog = Logger.open("recover-test");
             loggerFiled.set(dm, reloadedLog);
 
             Field pageCacheField = dm.getClass().getDeclaredField("pageCache");
