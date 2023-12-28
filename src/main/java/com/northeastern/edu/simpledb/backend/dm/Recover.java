@@ -3,6 +3,7 @@ package com.northeastern.edu.simpledb.backend.dm;
 import com.google.common.primitives.Bytes;
 import com.northeastern.edu.simpledb.backend.common.SubArray;
 import com.northeastern.edu.simpledb.backend.dm.cache.PageCache;
+import com.northeastern.edu.simpledb.backend.dm.dataItem.DataItem;
 import com.northeastern.edu.simpledb.backend.dm.logger.Logger;
 import com.northeastern.edu.simpledb.backend.dm.page.Page;
 import com.northeastern.edu.simpledb.backend.dm.page.SecondaryPage;
@@ -207,19 +208,14 @@ public class Recover {
     }
 
     private static void doInsertLog(PageCache pageCache, byte[] log, int flag) {
-        // step1 determine action based on flag
-        int pageNumber;
-        short offset;
-        byte[] raw;
-
+        // step1 parsing insert log
         InsertLogInfo insertLogInfo = parseInsertLog(log);
-        offset = insertLogInfo.offset;
-        pageNumber = insertLogInfo.pageNumber;
+        int pageNumber = insertLogInfo.pageNumber;
 
-        if (flag == REDO) raw = insertLogInfo.raw;
-        else raw = new byte[insertLogInfo.raw.length];
+        // step2 determine action based on flag
+        if (flag == REDO) DataItem.setDataItemRawInvalid(insertLogInfo.raw);
 
-        // step2 get page by page number
+        // step3 get page by page number
         Page page = null;
         try {
             page = pageCache.getPage(pageNumber);
@@ -227,15 +223,24 @@ public class Recover {
             Panic.panic(e);
         }
 
-        // step3 update page with the help of `recoverInsert()` from secondary page
+        // step4 update page with the help of `recoverInsert()` from secondary page
         assert page != null;
         try {
-            SecondaryPage.recoverInsert(page, raw, offset);
+            SecondaryPage.recoverInsert(page, insertLogInfo.raw, insertLogInfo.offset);
         } finally {
             page.release();
         }
     }
 
-
+    // when DataManger log into log file, data item should be wrapped in advance
+    public static byte[] updateLog(long xid, DataItem dataItem) {
+        byte[] logTypeRaw = {LOG_TYPE_UPDATE};
+        byte[] xidRaw = Parser.long2Byte(xid);
+        byte[] uidRaw = Parser.long2Byte(dataItem.getUid());
+        byte[] oldRaw = dataItem.getOldRaw();
+        SubArray raw = dataItem.getRaw();
+        byte[] newRaw = Arrays.copyOfRange(raw.raw, raw.start, raw.end);
+        return Bytes.concat(logTypeRaw, xidRaw, uidRaw, oldRaw, newRaw);
+    }
 
 }
