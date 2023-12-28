@@ -14,6 +14,8 @@ public class DataItem extends AbstractDataItem {
     static final int OF_SIZE = 1;
     static final int OF_DATA = 3;
 
+    static final byte VALID_STATE = 0b0;
+
     private SubArray raw;
     private byte[] oldRaw;
     private Lock rLock;
@@ -34,7 +36,7 @@ public class DataItem extends AbstractDataItem {
     }
 
     public boolean isValid() {
-        return raw.raw[raw.start + OF_VALID] == 0b1;
+        return raw.raw[raw.start + OF_VALID] == VALID_STATE;
     }
 
     /**
@@ -67,7 +69,7 @@ public class DataItem extends AbstractDataItem {
 
     // undo the previous action
     @Override
-    void unBefore() {
+    public void unBefore() {
         wLock.lock();
         page.setDirty(true);
         System.arraycopy(oldRaw, 0, raw.raw, raw.start, oldRaw.length); // oldRaw overwrite latestRaw
@@ -102,7 +104,7 @@ public class DataItem extends AbstractDataItem {
     }
 
     @Override
-    void rUnLock() {
+    public void rUnLock() {
         rLock.unlock();
     }
 
