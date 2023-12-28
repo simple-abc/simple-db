@@ -47,7 +47,7 @@ public abstract class AbstractDataItem {
         short dataSize = Parser.parseShort(Arrays.copyOfRange(raw, offset + DataItem.OF_SIZE, offset + DataItem.OF_DATA));
         short length = (short) (dataSize + DataItem.OF_DATA);  // total length of data item
         long uid = Types.addressToUid(page.getPageNumber(), offset);
-        return new DataItem(new SubArray(raw, offset, offset + length), raw, page, uid, dm);
+        return new DataItem(new SubArray(raw, offset, offset + length), new byte[length], page, uid, dm);
     }
 
     public static void setDataItemRawInvalid(byte[] raw) {
