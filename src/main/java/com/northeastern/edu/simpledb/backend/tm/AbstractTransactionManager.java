@@ -19,7 +19,7 @@ public abstract class AbstractTransactionManager {
     abstract boolean isAborted(long xid);
     abstract void close();
 
-    static TransactionManager create(String path) {
+    public static TransactionManager create(String path) {
         File f = new File(path + TransactionManager.XID_SUFFIX);
         try {
             if (!f.createNewFile()) {
@@ -49,7 +49,7 @@ public abstract class AbstractTransactionManager {
         return new TransactionManager(raf, fc);
     }
 
-    static TransactionManager open(String path) {
+    public static TransactionManager open(String path) {
         File f = new File(path + TransactionManager.XID_SUFFIX);
         if(!f.exists()) {
             Panic.panic(Error.FileNotExistsException);
