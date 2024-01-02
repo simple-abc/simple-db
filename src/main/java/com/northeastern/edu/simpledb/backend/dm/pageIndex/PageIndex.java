@@ -33,17 +33,17 @@ public class PageIndex {
 
 
     public void add(int pageNumber, int freeSpace) {
-        int number = freeSpace / THRESHOLD; // how many free block storage this page has?
+        int number = freeSpace / THRESHOLD; // how many free slot this page has?
         lists[number].add(new PageInfo(pageNumber, freeSpace));
     }
 
     /**
-     * calculating how many free block storage needed, then
-     * accessing the next one, having more block storage and
+     * calculating how many free slot needed, then
+     * accessing the next one, having more slot and
      * ensuring the data won't across two pages.
      */
     public PageInfo select(int spaceSize) {
-        int number = spaceSize / THRESHOLD; // how many free block storage need?
+        int number = spaceSize / THRESHOLD; // how many free slot need?
         if (number < INTERVALS_NO) number++; // rounded up
 
         // iterate over lists finding the first page doesn't acquire by other thread
