@@ -29,7 +29,7 @@ public class TransactionManager extends AbstractTransactionManager{
     private static final byte FIELD_TRAN_ABORTED = 2;
 
     // super transaction whose state is always committed
-    private static final long SUPER_XID = 0;
+    public static final long SUPER_XID = 0;
 
     // standard suffix of xid file
     static final String XID_SUFFIX = ".xid";
