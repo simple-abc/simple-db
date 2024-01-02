@@ -31,7 +31,7 @@ public class SecondaryPage {
         short offset = getFSO(page.getData());
         System.arraycopy(raw, 0, page.getData(), offset, raw.length);
         // update free space offset
-        setFSO(raw, (short)(offset + raw.length));
+        setFSO(page.getData(), (short)(offset + raw.length));
         return offset;
     }
 
