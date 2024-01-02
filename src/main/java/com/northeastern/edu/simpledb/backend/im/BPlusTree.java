@@ -125,7 +125,7 @@ public class BPlusTree {
     // search in node starting from root util reaching leaf
     private long searchLeaf(long nodeUid, long key) throws Exception {
         Node node = Node.loadNode(this, nodeUid);
-        System.out.println("node = " + node);
+        // System.out.println("node = " + node); for test purpose
         boolean isLeaf = node.isLeaf();
         node.release();
 
