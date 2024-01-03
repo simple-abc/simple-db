@@ -99,7 +99,7 @@ public class DataManger extends AbstractCache<DataItem> implements DataMangerHan
         return dataItem;
     }
 
-    // insert a log through DataManger
+    // insert a data through DataManger
     @Override
     public long insert(long xid, byte[] data) throws Exception {
         byte[] raw = DataItem.wrapDataItemRaw(data);
