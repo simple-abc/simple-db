@@ -191,10 +191,13 @@ ______
      W --> X(16)
      W --> Y(17)
      W --> Z(18)
-     V(Max) --> E(13)
+     V(MAX) --> E(13)
      V --> U(16)
      V --> W(MAX)
      newRoot --> A
      newRoot --> V
      ```
 - search()
+### Version Manager
+- two-phase locking & multi-version concurrency control
+- deadlock detection
