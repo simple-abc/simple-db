@@ -19,4 +19,7 @@ public class Error {
     // tm
     public static final Exception BadXIDFileException = new RuntimeException("Bad XID file!");
 
+    // vm
+    public static Exception NullEntryException = new RuntimeException("Entry is null!");
+    public static Exception DeadLockException = new RuntimeException("Deadlock detected!");
 }
