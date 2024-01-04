@@ -22,4 +22,7 @@ public class Error {
     // vm
     public static Exception NullEntryException = new RuntimeException("Entry is null!");
     public static Exception DeadLockException = new RuntimeException("Deadlock detected!");
+
+    // tbm
+    public static Exception InvalidCommandException = new RuntimeException("Command is invalid!");
 }
