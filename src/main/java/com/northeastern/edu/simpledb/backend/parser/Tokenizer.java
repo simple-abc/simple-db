@@ -324,7 +324,7 @@ public class Tokenizer {
         return (b >= '0' && b <= '9');
     }
 
-    private static boolean isAlphaBeta(byte b) {
+    static boolean isAlphaBeta(byte b) {
         return ((b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z'));
     }
 
