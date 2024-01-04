@@ -23,6 +23,7 @@ public class Error {
     public static Exception NullEntryException = new RuntimeException("Entry is null!");
     public static Exception DeadLockException = new RuntimeException("Deadlock detected!");
 
-    // tbm
+    // parser
     public static Exception InvalidCommandException = new RuntimeException("Command is invalid!");
+    public static Exception TableNoIndexException = new RuntimeException("Table has no index!");
 }
