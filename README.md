@@ -200,4 +200,23 @@ ______
 - search()
 ### Version Manager
 - two-phase locking & multi-version concurrency control
-- deadlock detection
+- deadlock detection by depth first search
+### Parser
+- lexical parser and grammar parser
+- finite state machine
+  ```mermaid
+    graph TD
+    INIT -->|Symbol| IN_SYMBOL
+    INIT -->|Quote| IN_QUOTE
+    INIT -->|AlphaBeta/Digit| IN_TOKEN
+    IN_SYMBOL -->|Any| INIT
+    IN_QUOTE -->|Any| IN_QUOTE
+    IN_QUOTE -->|QuoteChar| INIT
+    IN_TOKEN -->|AlphaBeta/Digit/Underscore| IN_TOKEN
+    IN_TOKEN -->|Blank| INIT
+  ```
+### Table Manager
+- field
+  - format: `[FieldName][TypeName][IndexUid]`
+- table
+  - format: `[TableName][NextTable][Fiedl1Uid][Field2Uid]...[FieldNUid]`
