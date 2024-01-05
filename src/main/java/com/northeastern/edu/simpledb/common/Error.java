@@ -33,4 +33,5 @@ public class Error {
     public static Exception TableNotFoundException = new RuntimeException("Table does not exists!");
     public static Exception FieldNotIndexedException = new RuntimeException("Field is not indexed!");
     public static Exception InvalidLogOpException = new RuntimeException("Invalid logic operation!");
+    public static Exception FieldNotFoundException = new RuntimeException("Field does not exists!");
 }
