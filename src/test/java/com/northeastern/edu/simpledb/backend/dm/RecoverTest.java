@@ -17,10 +17,10 @@ import java.util.Arrays;
 
 import static com.northeastern.edu.simpledb.backend.dm.cache.PageCache.DB_SUFFIX;
 import static com.northeastern.edu.simpledb.backend.dm.logger.Logger.LOG_SUFFIX;
+import static com.northeastern.edu.simpledb.backend.tm.TransactionManager.XID_SUFFIX;
 
 public class RecoverTest {
 
-    private static final String XID_SUFFIX = ".xid";
     private static DataManger dm;
     private static TransactionManager tm;
 
