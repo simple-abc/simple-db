@@ -9,12 +9,12 @@ import java.util.Arrays;
 public class Parser {
 
     public static long parseLong(byte[] bytes) {
-        ByteBuffer buf = ByteBuffer.wrap(bytes, 0, Long.SIZE);
+        ByteBuffer buf = ByteBuffer.wrap(bytes, 0, Long.BYTES);
         return buf.getLong();
     }
 
     public static byte[] long2Byte(long value) {
-        return ByteBuffer.allocate(Long.SIZE / Byte.SIZE).putLong(value).array();
+        return ByteBuffer.allocate(Long.BYTES).putLong(value).array();
     }
 
     public static short parseShort(byte[] bytes) {
@@ -23,15 +23,15 @@ public class Parser {
     }
 
     public static byte[] short2Byte(short value) {
-        return ByteBuffer.allocate(Short.SIZE / Byte.SIZE).putShort(value).array();
+        return ByteBuffer.allocate(Short.BYTES).putShort(value).array();
     }
 
     public static byte[] int2Byte(int value) {
-        return ByteBuffer.allocate(Integer.SIZE / Byte.SIZE).putInt(value).array();
+        return ByteBuffer.allocate(Integer.BYTES).putInt(value).array();
     }
 
     public static int parseInt(byte[] raw) {
-        return ByteBuffer.wrap(raw, 0, Integer.SIZE).getInt();
+        return ByteBuffer.wrap(raw, 0, Integer.BYTES).getInt();
     }
 
     public static ParseStringRes parseString(byte[] raw) {
