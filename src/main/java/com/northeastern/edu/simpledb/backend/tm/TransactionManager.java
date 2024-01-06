@@ -32,7 +32,7 @@ public class TransactionManager extends AbstractTransactionManager{
     public static final long SUPER_XID = 0;
 
     // standard suffix of xid file
-    static final String XID_SUFFIX = ".xid";
+    public static final String XID_SUFFIX = ".xid";
 
     private RandomAccessFile file;
     private FileChannel fc;
