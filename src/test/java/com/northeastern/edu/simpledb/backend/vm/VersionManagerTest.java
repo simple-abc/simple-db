@@ -14,8 +14,6 @@ import java.nio.charset.StandardCharsets;
 import static com.northeastern.edu.simpledb.backend.dm.cache.PageCache.DB_SUFFIX;
 import static com.northeastern.edu.simpledb.backend.dm.logger.Logger.LOG_SUFFIX;
 import static com.northeastern.edu.simpledb.backend.tm.TransactionManager.XID_SUFFIX;
-import static org.mockito.Mockito.RETURNS_SMART_NULLS;
-import static org.mockito.Mockito.when;
 
 class VersionManagerTest {
 
