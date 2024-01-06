@@ -29,6 +29,7 @@ public class Parser {
                     break;
                 case COMMIT:
                     stat = parseCommit(tokenizer);
+                    break;
                 case ABORT:
                     stat = parseAbort(tokenizer);
                     break;
@@ -76,8 +77,9 @@ public class Parser {
         return stat;
     }
 
-    private static Commit parseCommit(Tokenizer tokenizer) {
-        return null;
+    private static Commit parseCommit(Tokenizer tokenizer) throws Exception {
+        if (!"".equals(tokenizer.peek())) throw Error.InvalidCommandException;
+        return new Commit();
     }
 
     // show
