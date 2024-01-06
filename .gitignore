@@ -4,5 +4,11 @@
 # Temporary serialized file
 *.ser
 
+# DB data
+*.bt
+*.db
+*.log
+*.xid
+
 # Compiled file
 target/*
