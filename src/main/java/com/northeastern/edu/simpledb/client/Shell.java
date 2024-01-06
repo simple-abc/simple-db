@@ -14,8 +14,8 @@ public class Shell {
         Scanner scanner = new Scanner(System.in);
         try {
             while (true) {
-                System.out.print(":>");
-                String statStr = scanner.nextLine();
+                System.out.print(":> ");
+                String statStr = scanner.nextLine().strip();
                 if ("exit".equals(statStr) || "quit".equals(statStr)) break;
                 try {
                     byte[] res = client.execute(statStr.getBytes());
