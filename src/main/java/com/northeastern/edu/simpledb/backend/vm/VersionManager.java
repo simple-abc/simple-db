@@ -36,6 +36,7 @@ public class VersionManager extends AbstractCache<Entry> implements VersionManag
     @Override
     public byte[] read(long xid, long uid) throws Exception {
         Transaction transaction = activeTransaction.get(xid);
+        if (transaction == null) return null;
         if (transaction.err != null) throw transaction.err;
 
         Entry entry = null;
@@ -59,7 +60,7 @@ public class VersionManager extends AbstractCache<Entry> implements VersionManag
     @Override
     public long insert(long xid, byte[] data) throws Exception {
         Transaction transaction = activeTransaction.get(xid);
-
+        if (transaction == null) throw Error.InvalidCommandException;
         if (transaction.err != null) throw transaction.err;
 
         byte[] raw = Entry.wrapEntryRaw(xid, data);
@@ -69,9 +70,9 @@ public class VersionManager extends AbstractCache<Entry> implements VersionManag
     @Override
     public boolean delete(long xid, long uid) throws Exception {
         Transaction transaction = activeTransaction.get(xid);
-        if (transaction.err != null) {
-            throw transaction.err;
-        }
+        if (transaction == null) throw Error.InvalidCommandException;
+        if (transaction.err != null) throw transaction.err;
+
 
         Entry entry = null;
         try {
