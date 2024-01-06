@@ -224,7 +224,36 @@ public class Table {
             byte[] raw = tbm.vm.read(xid, uid);
             if (raw == null) continue;
             Map<String, Object> entry = parseEntry(raw);
-            sb.append(printEntry(entry)).append("\n");
+            sb.append(printEntry(entry, read)).append("\n");
+        }
+        return sb.toString();
+    }
+
+    private String printEntry(Map<String, Object> entry, Select select) {
+        StringBuilder sb = new StringBuilder("[");
+        int n = select.fields.length;
+        List<Field> printField = new ArrayList<>();
+        if (n > 0 && select.fields[0].equals("*")) {
+            printField = fields;
+        } else {
+            for (int i = 0; i < n; i++) {
+                for(Field field : fields) {
+                    if (field.fieldName.equals(select.fields[i])) {
+                        printField.add(field);
+                        break;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < printField.size(); i++) {
+            Field field = printField.get(i);
+            sb.append(field.printValue(entry.get(field.fieldName)));
+            if(i == printField.size() - 1) {
+                sb.append("]");
+            } else {
+                sb.append(", ");
+            }
         }
         return sb.toString();
     }
