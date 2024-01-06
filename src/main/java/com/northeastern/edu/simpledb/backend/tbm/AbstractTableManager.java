@@ -18,13 +18,13 @@ public abstract class AbstractTableManager {
     public abstract byte[] update(long xid, Update update) throws Exception;
     public abstract byte[] delete(long xid, Delete delete) throws Exception;
 
-    public static AbstractTableManager create(String path, VersionManager vm, DataManger dm) {
+    public static TableManager create(String path, VersionManager vm, DataManger dm) {
         Booter booter = Booter.create(path);
         booter.update(Parser.long2Byte(0));
         return new TableManager(vm, dm, booter);
     }
 
-    public static AbstractTableManager open(String path, VersionManager vm, DataManger dm) {
+    public static TableManager open(String path, VersionManager vm, DataManger dm) {
         Booter booter = Booter.open(path);
         return new TableManager(vm, dm ,booter);
     }
