@@ -34,4 +34,5 @@ public class Error {
     public static Exception FieldNotIndexedException = new RuntimeException("Field is not indexed!");
     public static Exception InvalidLogOpException = new RuntimeException("Invalid logic operation!");
     public static Exception FieldNotFoundException = new RuntimeException("Field does not exists!");
+    public static Exception ConcurrentUpdateException = new RuntimeException("Concurrent update happens!");
 }
