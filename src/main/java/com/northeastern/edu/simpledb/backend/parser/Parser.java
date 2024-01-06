@@ -18,7 +18,12 @@ public class Parser {
         String token = tokenizer.peek();
         tokenizer.pop();
 
-        STAT_TYPE stat_type = STAT_TYPE.valueOf(token.toUpperCase(Locale.ENGLISH));
+        STAT_TYPE stat_type = null;
+        try {
+            stat_type = STAT_TYPE.valueOf(token.toUpperCase(Locale.ENGLISH));
+        } catch (Exception e) {
+            throw Error.InvalidCommandException;
+        }
         System.out.println("stat_type = " + stat_type);
         Object stat = null;
         Exception statErr = null;
