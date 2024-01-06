@@ -35,4 +35,10 @@ public class Error {
     public static Exception InvalidLogOpException = new RuntimeException("Invalid logic operation!");
     public static Exception FieldNotFoundException = new RuntimeException("Field does not exists!");
     public static Exception ConcurrentUpdateException = new RuntimeException("Concurrent update happens!");
+
+    // c/s
+    public static Exception InvalidPkgDataException = new RuntimeException("Package data is invalid!");
+    public static Exception NestedTransactionException = new RuntimeException("Nested transaction not supported!");
+    public static Exception NoTransactionException = new RuntimeException("Not in transaction!");
+    public static Exception InvalidMemException = new RuntimeException("Memory is invalid!");
 }
