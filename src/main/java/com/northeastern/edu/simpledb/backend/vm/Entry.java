@@ -40,7 +40,7 @@ public class Entry {
     }
 
     public void release() {
-        dataItem.release();
+        vm.releaseEntry(this);
     }
 
     public byte[] data() {
@@ -56,7 +56,7 @@ public class Entry {
     }
 
     public long getXmin() {
-        dataItem.rUnLock();
+        dataItem.rLock();
         try {
             SubArray subArray = dataItem.data();
             return Parser.parseLong(Arrays.copyOfRange(subArray.raw, subArray.start + OF_XMIN, subArray.start + OF_XMAX));
@@ -66,7 +66,7 @@ public class Entry {
     }
 
     public long getXmax() {
-        dataItem.rUnLock();
+        dataItem.rLock();
         try {
             SubArray subArray = dataItem.data();
             return Parser.parseLong(Arrays.copyOfRange(subArray.raw, subArray.start + OF_XMAX, subArray.start + OF_DATA));
@@ -88,4 +88,10 @@ public class Entry {
     public long getUid() {
         return uid;
     }
+
+    public void remove() {
+        dataItem.release();
+    }
+
+
 }
