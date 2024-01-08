@@ -242,12 +242,12 @@ ______
   ```mermaid
     graph TD
     INIT -->|Symbol| IN_SYMBOL
-    INIT -->|Quote| IN_QUOTE
-    INIT -->|AlphaBeta/Digit| IN_TOKEN
+    INIT -->|QuoteChar| IN_QUOTE
+    INIT -->|Alphabet/Digit| IN_TOKEN
     IN_SYMBOL -->|Any| INIT
     IN_QUOTE -->|Any| IN_QUOTE
     IN_QUOTE -->|QuoteChar| INIT
-    IN_TOKEN -->|AlphaBeta/Digit/Underscore| IN_TOKEN
+    IN_TOKEN -->|Alphabet/Digit| IN_TOKEN
     IN_TOKEN -->|Blank| INIT
   ```
 ### Table Manager
