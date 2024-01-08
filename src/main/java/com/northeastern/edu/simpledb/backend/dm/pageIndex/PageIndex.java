@@ -20,6 +20,12 @@ public class PageIndex {
     private static final int THRESHOLD = PageCache.PAGE_SIZE / INTERVALS_NO;
 
     private Lock lock;
+
+    /**
+     * entry in Map
+     * key: the number of free slot : Integer
+     * value: all of PageInfo have the number of free slot : List
+     */
     private List<PageInfo>[] lists; 
 
     @SuppressWarnings("unchecked")
