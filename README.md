@@ -1,8 +1,37 @@
 # Simple DB
 ______
-log: `[InsertLog/UpdateLog[DataItem]]`   
-page `[L1Page][Secondary]`  
-transaction: `[Super][Normal]`
+- Data reliability and data recovery 
+- Two-stage locking protocol (2PL) implements serializable scheduling and MVCC
+- Two transaction isolation levels (read committed and repeatable read)
+- Deadlock handling 
+- Simple table, field management and SQL parsing
+- Socket-based server and client
+## How to start
+______
+### Pre-requirement
+- OpenJDK 11
+- Apache Maven 3.9.5 
+### Shell
+- step1 
+    ```bash
+    chmod +x ./start-server.sh ./start-client.sh
+    ```
+- step2  
+    ```bash
+    ./start-server.sh
+    ./start-client.sh   
+    ```
+## Dependency graph
+______
+```mermaid
+graph TD;
+    IM -->|Dependency| DM;
+    DM -->|Dependency| TM;
+    TBM -->|Dependency| VM;
+    TBM -->|Dependency| IM;
+    VM -->|Dependency| TM;
+    VM -->|Dependency| DM;
+```
 ## Transaction Manager
 ______
 ### Transaction Manager
@@ -13,48 +42,48 @@ ______
 ______
 ### Abstract Cache
 - template pattern
-### Page
-
-### Page Cache
-
-### Level1 Page, Secondary Page
-- format
-    - level1 page:
-        - when db start up, write random bytes from `OF_VC` to `OF_VC + LEN_VC - 1` byte
-        - when db close, copy random bytes from `OF_VC + LEN_VC` to `OF_VC + 2 * LEN_VC - 1` byte
-        - used to determine whether the database was shut down normally in the last time
-    - secondary page: `[Offset: 2bytes][Raw]`
-        - stored FSO (free space offset)
-        - used to process raw data as secondary page when page cache need it in the process of initialization of DataManager
+- reference counting
 ### Logger
 - iterator pattern
 - format
     - log file: `[Xchecksum][log1][log2][log3]...[logN][BadTail]`
     - log: `[Size][Checksum][Data]`
-    - data:
+    - data
         - update: `[DataType: 1byte][Xid: 8bytes][Uid: 8bytes][OldRaw][LatestRaw]`
             - uid: `[PageNumber: 4bytes][Offset: 4bytes]`
         - insert: `[DataType: 1byte][Xid: 8bytes][PageNumber: 4bytes][Offset: 2bytes][Raw]`
-- process of writing a log
+- process
+  - redo: scan log and process redo logs which state is committed
+  - undo: scan log and process undo logs which state is active reversely
+  - logging
     1. wrap data to log
     2. write log to log file
     3. update check sum
     4. flush to disk
+### Page
+- format
+  - level1 page 
+    - when db start up, write random bytes from `OF_VC` to `OF_VC + LEN_VC - 1` byte
+    - when db close, copy random bytes from `OF_VC + LEN_VC` to `OF_VC + 2 * LEN_VC - 1` byte
+    - used to determine whether the database was shut down normally in the last time
+  - secondary page
+    - `[Offset: 2bytes][Raw]`
+    - stored FSO (free space offset)
+    - used to process raw data as secondary page when page cache need it in the process of initialization of DataManager
 ### Page Index
-- splitting the secondary page into four-ty block storage
-- entry in Map
-    - key: the number of free block storage : Integer
-    - value: all of PageInfo have the number of free block storage : List
-- class
-    - PageInfo
-        - pageNumber
-        - freeSpace
+- splitting the secondary page into four-ty slots
+  > the page index caches the free space of each page, it is used to quickly find a page with suitable space when the upper module performs an insertion operation without checking the information of each page from the disk or cache.
 ### Data Item
 - format
-    - data item: `[ValidFlag: 1byte][DataSize: 3bytes][Raw]`
+  - data item: `[ValidFlag: 1byte][DataSize: 3bytes][Raw]`
 ### Data Manager
+- feature: providing data accessing service for the upper layer, eg: vm, im
+- method
   - insert()
   - read()
+  - update()
+## Index Manager
+______
 ### Index Manager
 - format
   - Node: `[NumberOfKeys][SiblingUid][Son0][Key0][Son1][Key1]...[SonN][KeyN]`
@@ -198,9 +227,15 @@ ______
      newRoot --> V
      ```
 - search()
+## Version Manager
+______
 ### Version Manager
 - two-phase locking & multi-version concurrency control
 - deadlock detection by depth first search
+- format
+  - entry: `[Xmin][Xmax][Data]`
+## Table Manager
+______
 ### Parser
 - lexical parser and grammar parser
 - finite state machine
@@ -216,7 +251,15 @@ ______
     IN_TOKEN -->|Blank| INIT
   ```
 ### Table Manager
-- field
-  - format: `[FieldName][TypeName][IndexUid]`
-- table
-  - format: `[TableName][NextTable][Fiedl1Uid][Field2Uid]...[FieldNUid]`
+- format
+  - field: `[FieldName][TypeName][IndexUid]`
+    - `[StringLength][StringData]`
+  - table: `[TableName][NextTable][Fiedl1Uid][Field2Uid]...[FieldNUid]`
+- safe/atomic update of files via temporary files
+  > ref: https://mozillazg.com/2018/05/a-way-to-atomic-write-or-safe-update-a-file.html
+- when creating a new table, the header interpolation method is used, so the Booter file needs to be updated every time a table is created.
+## Transport
+______
+### C/S
+- A special binary format is used for communication between the client and the server. 
+- In order to avoid problems caused by special characters, the data will be converted into a hexadecimal string (Hex String).
